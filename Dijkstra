@@ -15,6 +15,7 @@ public:
     Graph(int V);  
     void addEdge(int u, int v, int w); 
     void shortestPath(int s,int dest); 
+    void paren(int parent[],int size,int u,int d);
 }; 
 
 Graph::Graph(int V) 
@@ -29,11 +30,28 @@ void Graph::addEdge(int u, int v, int w)
     adj[v].push_back(make_pair(u, w)); 
 } 
 
+void Graph:: paren(int parent[],int size,int u,int d)
+{
+     if(parent[u]==-1)
+     {
+         printf("%d -> ",u);
+         return;
+     }
+   
+   
+  paren(parent, size,parent[u],d);
+  if(u==d)
+  printf("%d\n",u);
+  else
+  printf("%d -> ",u);
+}
+
 void Graph::shortestPath(int src,int dest) 
 { 
     priority_queue< pa, vector <pa> , greater<pa> > pq; 
     vector<int> dist(V, INF); 
     pq.push(make_pair(0, src)); 
+    int parent[V]={-1};
     dist[src] = 0; 
     while (!pq.empty()) 
     { 
@@ -48,12 +66,17 @@ void Graph::shortestPath(int src,int dest)
             if (dist[v] > dist[u] + weight) 
             { 
                 dist[v] = dist[u] + weight; 
+                parent[v]=u;
                 pq.push(make_pair(dist[v], v)); 
             } 
         } 
     } 
     printf("Shortest distance between current position to destination is: "); 
         printf("%d \t\n", dist[dest]); 
+printf("Shortest path is: "); 
+paren(parent,V,dest,dest);
+      
+     
 } 
 
 int main() 
